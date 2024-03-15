@@ -1,11 +1,58 @@
+def generateJenkinsfile() {
+    def jenkinsfile = '''
 pipeline {
     agent any
     
+    environment {
+        // Define environment variables if needed
+        DOCKER_IMAGE = 'your_backend_image_name:latest'
+    }
+    
     stages {
-        stage('Hello') {
+        stage('Checkout') {
             steps {
-                echo 'Hello, World!'
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh 'mvn clean package'
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                script {
+                    docker.build(env.DOCKER_IMAGE)
+                }
+            }
+        }
+        
+        stage('Push Docker Image') {
+            steps {
+                echo 'Pushing Docker image to registry...'
+                script {
+                    docker.withRegistry('https://your_registry_url/', 'your_registry_credentials_id') {
+                        docker.image(env.DOCKER_IMAGE).push()
+                    }
+                }
             }
         }
     }
+    
+    post {
+        success {
+            echo 'Pipeline succeeded! Deploy your Docker image.'
+            // Add commands to deploy your Docker image (e.g., to Kubernetes, Docker Swarm, etc.)
+        }
+        failure {
+            echo 'Pipeline failed! Handle failure appropriately.'
+            // Add commands to handle failure (e.g., send notifications, rollback, etc.)
+        }
+    }
 }
+'''
+    new File('Jenkins
