@@ -1,51 +1,11 @@
-
-
 pipeline {
     agent any
     
     stages {
-        stage('Checkout') {
+        stage('Hello') {
             steps {
-                // Checkout your source code from your version control system
-                git 'https://github.com/your/repository.git'
-            }
-        }
-        
-        stage('Build Frontend') {
-            steps {
-                // Build your frontend application
-                sh 'cd frontend && npm install && npm run build'
-            }
-        }
-        
-        stage('Build Backend') {
-            steps {
-                // Build your backend application
-                sh 'cd backend && mvn clean package'
-            }
-        }
-        
-        stage('Deploy Database') {
-            steps {
-                // Deploy your database
-                sh 'kubectl apply -f database.yaml' // Example for Kubernetes deployment
-            }
-        }
-        
-        stage('Deploy Frontend') {
-            steps {
-                // Deploy your frontend application
-                sh 'kubectl apply -f frontend.yaml' // Example for Kubernetes deployment
-            }
-        }
-        
-        stage('Deploy Backend') {
-            steps {
-                // Deploy your backend application
-                sh 'kubectl apply -f backend.yaml' // Example for Kubernetes deployment
+                echo 'Hello, World!'
             }
         }
     }
-    
-    // Optionally, define post actions or other pipeline-wide settings here
 }
